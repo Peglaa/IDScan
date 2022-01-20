@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     // result is valid, you can use it however you wish
                     Log.d("TAG", "SCAN_RESULT: " + result.getDateOfExpiry().getDate());
 
+
                 }
 
 
