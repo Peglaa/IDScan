@@ -1,6 +1,7 @@
 package com.damir.stipancic.blinkstipancic;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.microblink.MicroblinkSDK;
 

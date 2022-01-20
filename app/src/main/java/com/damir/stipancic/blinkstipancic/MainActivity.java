@@ -1,22 +1,28 @@
 package com.damir.stipancic.blinkstipancic;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
+import com.damir.stipancic.blinkstipancic.viewModels.MainActivityViewModel;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
 import com.microblink.uisettings.ActivityRunner;
 import com.microblink.uisettings.BlinkIdUISettings;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
+    private MainActivityViewModel mMainActivityViewModel;
     private final static int MY_REQUEST_CODE = 100;
     private Button mScanBtn;
     private BlinkIdCombinedRecognizer mRecognizer;
@@ -36,8 +42,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mRecognizer = new BlinkIdCombinedRecognizer();
-
         mRecognizerBundle = new RecognizerBundle(mRecognizer);
+
+        initViewModel();
+    }
+
+    private void initViewModel() {
+
+        mMainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        mMainActivityViewModel.getDocumentListObserver().observe(this, new Observer<List<ScannedDocumentEntity>>() {
+            @Override
+            public void onChanged(List<ScannedDocumentEntity> scannedDocumentEntities) {
+                if(scannedDocumentEntities == null){
+                    //noResulttextView.setVisibility(View.VISIBLE);
+                    //recyclerView.setVisibility(View.GONE);
+                }
+                else{
+                    //noResulttextView.setVisibility(View.Gone);
+                    //recyclerView.setVisibility(View.VISIBLE)
+                }
+            }
+        });
     }
 
     public void startScanning() {
@@ -64,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 BlinkIdCombinedRecognizer.Result result = mRecognizer.getResult();
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
                     // result is valid, you can use it however you wish
-                    Log.d("TAG", "SCAN_RESULT: " + result.getDateOfExpiry().getDate());
+
 
 
                 }

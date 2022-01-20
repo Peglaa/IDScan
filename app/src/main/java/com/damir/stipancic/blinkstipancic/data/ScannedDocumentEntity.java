@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity(tableName = "scanned_document")
-public class ScannedDocument {
+public class ScannedDocumentEntity {
 
     private String firstName;
 

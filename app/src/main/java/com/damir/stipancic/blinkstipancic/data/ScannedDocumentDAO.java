@@ -14,11 +14,11 @@ import io.reactivex.rxjava3.core.Single;
 public interface ScannedDocumentDAO {
 
     @Query("Select * FROM scanned_document")
-    Single<List<ScannedDocument>> loadAllDocuments();
+    List<ScannedDocumentEntity> loadAllDocuments();
 
     @Insert
-    Completable insertDocument(ScannedDocument document);
+    void insertDocument(ScannedDocumentEntity document);
 
     @Delete
-    Completable deleteDocument(ScannedDocument documents);
+    void deleteDocument(ScannedDocumentEntity documents);
 }

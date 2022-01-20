@@ -8,12 +8,12 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(
-        entities = {ScannedDocument.class},
+        entities = {ScannedDocumentEntity.class},
         version = 1,
         exportSchema = false
 )
 @TypeConverters({Converters.class})
-abstract class ScannedDocumentDatabase extends RoomDatabase {
+public abstract class ScannedDocumentDatabase extends RoomDatabase {
 
     public static ScannedDocumentDatabase INSTANCE;
 
@@ -23,6 +23,7 @@ abstract class ScannedDocumentDatabase extends RoomDatabase {
         if(INSTANCE == null){
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     ScannedDocumentDatabase.class, "scanned_document_database")
+                    .allowMainThreadQueries()
                     .build();
         }
         return INSTANCE;
