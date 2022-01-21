@@ -22,7 +22,6 @@ public abstract class ScannedDocumentDatabase extends RoomDatabase {
         if(INSTANCE == null){
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     ScannedDocumentDatabase.class, "scanned_document_database")
-                    .allowMainThreadQueries()
                     .build();
         }
         return INSTANCE;

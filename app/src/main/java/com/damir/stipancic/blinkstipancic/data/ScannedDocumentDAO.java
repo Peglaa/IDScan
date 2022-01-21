@@ -9,17 +9,19 @@ import androidx.room.Query;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public interface ScannedDocumentDAO {
 
     @Query("Select * FROM scanned_document")
-    List<ScannedDocumentEntity> loadAllDocuments();
+    Single<List<ScannedDocumentEntity>> loadAllDocuments();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertDocument(ScannedDocumentEntity document);
+    Completable insertDocument(ScannedDocumentEntity document);
 
     @Delete
-    void deleteDocument(ScannedDocumentEntity documents);
+    Completable deleteDocument(ScannedDocumentEntity documents);
 }
