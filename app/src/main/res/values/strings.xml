@@ -3,4 +3,12 @@
     <string name="face_image">face_image</string>
     <string name="front_image">front_image</string>
     <string name="back_image">back_image</string>
+    <string name="FirstName">First name: %1$s</string>
+    <string name="LastName">Last name: %1$s</string>
+    <string name="Gender">Gender: %1$s</string>
+    <string name="DateOfBirth">Date of birth: %1$s</string>
+    <string name="OIB">OIB: %1$s</string>
+    <string name="Nationality">Nationality: %1$s</string>
+    <string name="DocumentNumber">Document Number: %1$s</string>
+    <string name="DateOfExpiry">Date of expiry: %1$s</string>
 </resources>

@@ -55,7 +55,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         return adapter.getList().get(position).getOIB();
     }
 
-    public void insertDocumentToDB(BlinkIdCombinedRecognizer.Result result, MainActivityRecyclerAdapter adapter){
+    public void insertDocumentToDB(BlinkIdCombinedRecognizer.Result result, MainActivityRecyclerAdapter adapter, String faceImageLocation, String frontImageLocation, String backImageLocation){
 
         Log.d("TAG", "OIB: " + result.getPersonalIdNumber());
         String firstName = result.getFirstName();
@@ -70,9 +70,13 @@ public class MainActivityViewModel extends AndroidViewModel {
         String dateOfExpiry = null;
         if(result.getDateOfExpiry().getDate() != null)
             dateOfExpiry = result.getDateOfExpiry().getDate().toString();
-        String faceImage = "blabla";
-        String frontImage = "blabla";
-        String backImage = "blabla";
+        String faceImage = null, frontImage = null, backImage = null;
+        if(faceImageLocation != null)
+            faceImage = faceImageLocation;
+        if(frontImageLocation != null)
+            frontImage = frontImageLocation;
+        if(backImageLocation != null)
+            backImage = backImageLocation;
 
 
         ScannedDocumentEntity document = new ScannedDocumentEntity(firstName, lastName, gender, OIB, dateOfBirth, nationality, documentNumber, dateOfExpiry, faceImage, frontImage, backImage);

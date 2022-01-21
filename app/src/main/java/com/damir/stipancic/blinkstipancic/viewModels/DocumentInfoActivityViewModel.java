@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.damir.stipancic.blinkstipancic.OnFinishedListener;
 import com.damir.stipancic.blinkstipancic.adapters.DocumentInfoActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentDatabase;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
@@ -20,17 +21,16 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class DocumentInfoActivityViewModel extends AndroidViewModel {
 
     private ScannedDocumentDatabase mDocumentDatabase;
-    private DocumentInfoActivityRecyclerAdapter adapter;
+    private ScannedDocumentEntity mScannedDocumentEntity;
 
 
     public DocumentInfoActivityViewModel(@NonNull Application application) {
         super(application);
 
         mDocumentDatabase = ScannedDocumentDatabase.getInstance(application.getApplicationContext());
-        adapter = new DocumentInfoActivityRecyclerAdapter();
     }
 
-    public void getDocumentByOIB(String oib){
+    public void getDocumentByOIB(String oib, OnFinishedListener listener){
         mDocumentDatabase.documentDAO().loadDocumentByOIB(oib).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<ScannedDocumentEntity>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
@@ -40,7 +40,9 @@ public class DocumentInfoActivityViewModel extends AndroidViewModel {
             @Override
             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull ScannedDocumentEntity scannedDocumentEntity) {
 
-                adapter.setList(getInfo(scannedDocumentEntity));
+                mScannedDocumentEntity = scannedDocumentEntity;
+                listener.onFinished(mScannedDocumentEntity);
+
 
             }
 
@@ -50,23 +52,6 @@ public class DocumentInfoActivityViewModel extends AndroidViewModel {
             }
         });
 
-
-
-}
-
-    private List<String> getInfo(ScannedDocumentEntity scannedDocumentEntity) {
-        List<String> list = new ArrayList<>();
-        list.add(scannedDocumentEntity.getGender());
-        list.add(scannedDocumentEntity.getDateOfBirth());
-        list.add(scannedDocumentEntity.getOIB());
-        list.add(scannedDocumentEntity.getNationality());
-        list.add(scannedDocumentEntity.getDocumentNumber());
-        list.add(scannedDocumentEntity.getDateOfExpiry());
-        return list;
     }
 
-    public DocumentInfoActivityRecyclerAdapter getAdapter(){
-
-        return adapter;
-    }
 }

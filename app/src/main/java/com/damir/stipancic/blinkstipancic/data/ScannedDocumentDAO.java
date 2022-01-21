@@ -23,6 +23,6 @@ public interface ScannedDocumentDAO {
     @Delete
     Completable deleteDocument(ScannedDocumentEntity documents);
 
-    @Query("SELECT * FROM scanned_document WHERE OIB == :oib")
+    @Query("SELECT * FROM scanned_document WHERE OIB = :oib")
     Single<ScannedDocumentEntity> loadDocumentByOIB(String oib);
 }
