@@ -1,4 +1,4 @@
-package com.damir.stipancic.blinkstipancic.adapters;
+package com.damir.stipancic.blinkstipancic.adapter;
 
 import android.content.Context;
 import android.util.Log;

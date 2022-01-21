@@ -22,7 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.damir.stipancic.blinkstipancic.adapters.MainActivityRecyclerAdapter;
+import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.viewModels.MainActivityViewModel;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
@@ -79,22 +79,6 @@ public class MainActivity extends AppCompatActivity {
             // request write permission
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // permission was granted
-                Toast.makeText(this, "Write external storage permission GRANTED!", Toast.LENGTH_SHORT).show();
-            } else {
-                // permission denied
-                Toast.makeText(this, "Write external storage permission is required!", Toast.LENGTH_SHORT).show();
-            }
         }
 
     }
@@ -167,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
                     // result is valid, you can use it however you wish
                     mMainActivityViewModel.insertDocumentToDB(result, mAdapter, faceImageLocation, fullDocumentFrontImageLocation, fullDocumentBackImageLocation);
+                    Intent intent = new Intent(this, DocumentInfoActivity.class);
+                    String OIB = result.getPersonalIdNumber();
+                    intent.putExtra("OIB", OIB);
+                    startActivity(intent);
 
 
                 }
@@ -200,5 +188,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return mypath.getPath();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted
+                Toast.makeText(this, "Write external storage permission GRANTED!", Toast.LENGTH_SHORT).show();
+            } else {
+                // permission denied
+                Toast.makeText(this, "Write external storage permission is required!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 }

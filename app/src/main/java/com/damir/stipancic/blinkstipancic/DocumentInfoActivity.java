@@ -1,9 +1,6 @@
 package com.damir.stipancic.blinkstipancic;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,21 +10,13 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.damir.stipancic.blinkstipancic.adapters.DocumentInfoActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
 import com.damir.stipancic.blinkstipancic.viewModels.DocumentInfoActivityViewModel;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class DocumentInfoActivity extends AppCompatActivity implements OnFinishedListener{
 
     private TextView mFirstNameTV, mLastNameTV, mGenderTV, mDateOfBirthTV, mOibTV, mNationalityTV, mDocumentNumberTV, mDateOfExpiryTV;
-    private ScannedDocumentEntity mScannedDocument;
     private ImageView mFrontImage, mFaceImage, mBackImage;
-    private DocumentInfoActivityViewModel infoViewModel;
-    private String mOIB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +24,15 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
         setContentView(R.layout.activity_document_info);
 
         Intent intent = getIntent();
-        mOIB = intent.getStringExtra("OIB");
+        String mOIB = intent.getStringExtra("OIB");
 
-        infoViewModel = new DocumentInfoActivityViewModel(getApplication());
+        DocumentInfoActivityViewModel infoViewModel = new DocumentInfoActivityViewModel(getApplication());
         infoViewModel.getDocumentByOIB(mOIB, this);
+        setupLayout();
+
+    }
+
+    private void setupLayout() {
         mFirstNameTV = findViewById(R.id.tvInfoFirstName);
         mLastNameTV = findViewById(R.id.tvInfoLastName);
         mGenderTV = findViewById(R.id.tvInfoGender);
@@ -50,7 +44,6 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
         mFrontImage = findViewById(R.id.ivInfoFrontImage);
         mFaceImage = findViewById(R.id.ivInfoFaceImage);
         mBackImage = findViewById(R.id.ivInfoBackImage);
-
     }
 
     private void displayInformation(ScannedDocumentEntity scannedDocument) {
@@ -80,9 +73,7 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
 
     @Override
     public void onFinished(ScannedDocumentEntity scannedDocument) {
-        mScannedDocument = scannedDocument;
-        Log.d("TAG", "onCreate: " + mScannedDocument.toString());
-        displayInformation(mScannedDocument);
+        displayInformation(scannedDocument);
     }
 
     @Override

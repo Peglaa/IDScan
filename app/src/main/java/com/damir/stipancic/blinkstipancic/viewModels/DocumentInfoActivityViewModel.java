@@ -6,12 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.damir.stipancic.blinkstipancic.OnFinishedListener;
-import com.damir.stipancic.blinkstipancic.adapters.DocumentInfoActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentDatabase;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.SingleObserver;

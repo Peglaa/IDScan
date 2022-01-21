@@ -6,7 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.damir.stipancic.blinkstipancic.adapters.MainActivityRecyclerAdapter;
+import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentDatabase;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
