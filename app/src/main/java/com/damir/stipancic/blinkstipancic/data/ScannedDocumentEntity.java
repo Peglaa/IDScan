@@ -19,19 +19,46 @@ public class ScannedDocumentEntity {
     @PrimaryKey
     private String OIB;
 
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     private String nationality;
 
     private String documentNumber;
 
-    private Date dateOfExpiry;
+    private String dateOfExpiry;
 
     private String faceImage;
 
     private String frontImage;
 
     private String backImage;
+
+    public ScannedDocumentEntity(
+            String firstName,
+            String lastName,
+            String gender,
+            @NonNull String OIB,
+            String dateOfBirth,
+            String nationality,
+            String documentNumber,
+            String dateOfExpiry,
+            String faceImage,
+            String frontImage,
+            String backImage){
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.OIB = OIB;
+        this.dateOfBirth = dateOfBirth;
+        this.nationality = nationality;
+        this.documentNumber = documentNumber;
+        this.dateOfExpiry = dateOfExpiry;
+        this.faceImage = faceImage;
+        this.frontImage = frontImage;
+        this.backImage = backImage;
+
+    }
 
     public String getFirstName() {
         return firstName;
@@ -66,11 +93,11 @@ public class ScannedDocumentEntity {
         this.OIB = OIB;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -90,11 +117,11 @@ public class ScannedDocumentEntity {
         this.documentNumber = documentNumber;
     }
 
-    public Date getDateOfExpiry() {
+    public String getDateOfExpiry() {
         return dateOfExpiry;
     }
 
-    public void setDateOfExpiry(Date dateOfExpiry) {
+    public void setDateOfExpiry(String dateOfExpiry) {
         this.dateOfExpiry = dateOfExpiry;
     }
 

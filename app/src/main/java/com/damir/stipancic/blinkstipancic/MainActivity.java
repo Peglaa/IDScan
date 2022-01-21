@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -58,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     //recyclerView.setVisibility(View.GONE);
                 }
                 else{
-                    //noResulttextView.setVisibility(View.Gone);
-                    //recyclerView.setVisibility(View.VISIBLE)
+                    Log.d("TAG", "INSERTED: " + scannedDocumentEntities.get(0).getFirstName());
                 }
             }
         });
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 BlinkIdCombinedRecognizer.Result result = mRecognizer.getResult();
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
                     // result is valid, you can use it however you wish
-
+                    mMainActivityViewModel.insertDocumentToDB(result);
 
 
                 }

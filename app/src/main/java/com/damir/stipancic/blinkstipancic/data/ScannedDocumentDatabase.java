@@ -12,7 +12,6 @@ import androidx.room.TypeConverters;
         version = 1,
         exportSchema = false
 )
-@TypeConverters({Converters.class})
 public abstract class ScannedDocumentDatabase extends RoomDatabase {
 
     public static ScannedDocumentDatabase INSTANCE;
