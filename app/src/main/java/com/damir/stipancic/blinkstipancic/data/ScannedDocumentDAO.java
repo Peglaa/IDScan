@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface ScannedDocumentDAO {
 
-    @Query("Select * FROM scanned_document")
+    @Query("SELECT * FROM scanned_document")
     Single<List<ScannedDocumentEntity>> loadAllDocuments();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -22,4 +22,7 @@ public interface ScannedDocumentDAO {
 
     @Delete
     Completable deleteDocument(ScannedDocumentEntity documents);
+
+    @Query("SELECT * FROM scanned_document WHERE OIB == :oib")
+    Single<ScannedDocumentEntity> loadDocumentByOIB(String oib);
 }

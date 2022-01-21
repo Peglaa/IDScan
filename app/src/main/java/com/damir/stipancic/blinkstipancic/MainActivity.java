@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.damir.stipancic.blinkstipancic.adapters.MainActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.viewModels.MainActivityViewModel;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
@@ -25,18 +26,32 @@ public class MainActivity extends AppCompatActivity {
     private final static int MY_REQUEST_CODE = 100;
     private BlinkIdCombinedRecognizer mRecognizer;
     private RecognizerBundle mRecognizerBundle;
+    private MainActivityRecyclerAdapter.OnDocumentClick mListener;
+    private MainActivityRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         setupScanButton();
         setupViewModel();
+        setupOnClickListener();
         setupRecycler();
         fetchRecyclerData();
         setupBlinkRecognizer();
 
+
+    }
+
+    private void setupOnClickListener() {
+        mListener = (v, position) -> {
+            Intent intent = new Intent(v.getContext(), DocumentInfoActivity.class);
+            String OIB = mMainActivityViewModel.getOIB(position, mAdapter);
+            intent.putExtra("OIB", OIB);
+            startActivity(intent);
+        };
     }
 
     private void setupScanButton() {
@@ -57,11 +72,12 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rvMainActivity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(mMainActivityViewModel.getAdapter());
+        mAdapter = new MainActivityRecyclerAdapter(mListener, this);
+        recyclerView.setAdapter(mAdapter);
     }
 
     private void fetchRecyclerData() {
-        mMainActivityViewModel.getDocumentsFromDB();
+        mMainActivityViewModel.getDocumentsFromDB(mAdapter);
     }
 
     private void setupBlinkRecognizer() {
@@ -93,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 BlinkIdCombinedRecognizer.Result result = mRecognizer.getResult();
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
                     // result is valid, you can use it however you wish
-                    mMainActivityViewModel.insertDocumentToDB(result);
+                    mMainActivityViewModel.insertDocumentToDB(result, mAdapter);
 
 
                 }

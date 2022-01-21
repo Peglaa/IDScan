@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">BlinkStipancic</string>
+    <string name="face_image">face_image</string>
+    <string name="front_image">front_image</string>
+    <string name="back_image">back_image</string>
 </resources>

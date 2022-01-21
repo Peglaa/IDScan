@@ -22,16 +22,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class MainActivityViewModel extends AndroidViewModel {
 
     private ScannedDocumentDatabase mDocumentDatabase;
-    private MainActivityRecyclerAdapter adapter;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
 
         mDocumentDatabase = ScannedDocumentDatabase.getInstance(application.getApplicationContext());
-        adapter = new MainActivityRecyclerAdapter();
     }
 
-    public void getDocumentsFromDB(){
+    public void getDocumentsFromDB(MainActivityRecyclerAdapter adapter){
         mDocumentDatabase.documentDAO().loadAllDocuments().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<ScannedDocumentEntity>>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
@@ -53,12 +51,11 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     }
 
-    public MainActivityRecyclerAdapter getAdapter(){
-
-        return adapter;
+    public String getOIB(int position, MainActivityRecyclerAdapter adapter){
+        return adapter.getList().get(position).getOIB();
     }
 
-    public void insertDocumentToDB(BlinkIdCombinedRecognizer.Result result){
+    public void insertDocumentToDB(BlinkIdCombinedRecognizer.Result result, MainActivityRecyclerAdapter adapter){
 
         Log.d("TAG", "OIB: " + result.getPersonalIdNumber());
         String firstName = result.getFirstName();
@@ -88,7 +85,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
             @Override
             public void onComplete() {
-                getDocumentsFromDB();
+                getDocumentsFromDB(adapter);
             }
 
             @Override
@@ -100,9 +97,9 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     }
 
-    public void deleteDocumentFromDB(ScannedDocumentEntity document){
+    public void deleteDocumentFromDB(ScannedDocumentEntity document, MainActivityRecyclerAdapter adapter){
 
         mDocumentDatabase.documentDAO().deleteDocument(document);
-        getDocumentsFromDB();
+        getDocumentsFromDB(adapter);
     }
 }
