@@ -1,42 +1,32 @@
 package com.damir.stipancic.blinkstipancic.viewModels;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
 
 import com.damir.stipancic.blinkstipancic.adapters.MainActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentDatabase;
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
-import com.microblink.results.date.Date;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.CompletableObserver;
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
-    private List<ScannedDocumentEntity> mListOfDocuments;
     private ScannedDocumentDatabase mDocumentDatabase;
     private MainActivityRecyclerAdapter adapter;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
 
-        mListOfDocuments = new ArrayList<>();
         mDocumentDatabase = ScannedDocumentDatabase.getInstance(application.getApplicationContext());
         adapter = new MainActivityRecyclerAdapter();
     }
