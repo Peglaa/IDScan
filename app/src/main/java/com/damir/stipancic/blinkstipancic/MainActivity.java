@@ -27,6 +27,7 @@ import com.damir.stipancic.blinkstipancic.viewModels.MainActivityViewModel;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
+import com.microblink.entities.recognizers.blinkid.generic.classinfo.ClassInfo;
 import com.microblink.image.Image;
 import com.microblink.uisettings.ActivityRunner;
 import com.microblink.uisettings.BlinkIdUISettings;
@@ -57,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         setupRecycler();
         fetchRecyclerData();
         setupBlinkRecognizer();
-
-
     }
 
     private void setupOnClickListener() {
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rvMainActivity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        mAdapter = new MainActivityRecyclerAdapter(mListener, this);
+        mAdapter = new MainActivityRecyclerAdapter(mListener);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -132,11 +131,6 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 // load the data into all recognizers bundled within your RecognizerBundle
                 mRecognizerBundle.loadFromIntent(data);
-
-                // now every recognizer object that was bundled within RecognizerBundle
-                // has been updated with results obtained during scanning session
-
-                // you can get the result by invoking getResult on recognizer
                 BlinkIdCombinedRecognizer.Result result = mRecognizer.getResult();
 
                 String fullDocumentFrontImageLocation = storeImage("fullDocumentImageFront", result.getFullDocumentFrontImage());
@@ -149,13 +143,12 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
-                    // result is valid, you can use it however you wish
+                    // Send result to ViewModel and create a class object to store in Room
                     mMainActivityViewModel.insertDocumentToDB(result, mAdapter, faceImageLocation, fullDocumentFrontImageLocation, fullDocumentBackImageLocation);
                     Intent intent = new Intent(this, DocumentInfoActivity.class);
                     String OIB = result.getPersonalIdNumber();
                     intent.putExtra("OIB", OIB);
                     startActivity(intent);
-
 
                 }
 

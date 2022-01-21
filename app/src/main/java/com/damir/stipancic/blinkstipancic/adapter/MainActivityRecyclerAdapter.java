@@ -1,6 +1,5 @@
 package com.damir.stipancic.blinkstipancic.adapter;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +19,9 @@ public class MainActivityRecyclerAdapter extends RecyclerView.Adapter<MainActivi
 
     private List<ScannedDocumentEntity> documentList = new ArrayList<>();
     private final OnDocumentClick mListener;
-    private Context mContext;
 
-    public MainActivityRecyclerAdapter(OnDocumentClick listener, Context context){
+    public MainActivityRecyclerAdapter(OnDocumentClick listener){
         mListener = listener;
-        mContext = context;
     }
 
     @NonNull
