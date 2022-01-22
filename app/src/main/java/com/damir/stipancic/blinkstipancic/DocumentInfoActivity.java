@@ -68,7 +68,7 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
     {
         BitmapFactory.Options options = new BitmapFactory.Options();
         Bitmap bitmap;
-        options.inSampleSize = 8;
+        options.inSampleSize = 1;
         bitmap = BitmapFactory.decodeFile(path, options);
 
         //Bitmap bitmap2 = Bitmap.createScaledBitmap(bitmap1,  600 ,600, true);//this bitmap2 you can use only for display
