@@ -67,19 +67,19 @@
         />
 
     <ImageView
-        android:id="@+id/ivInfoFrontImage"
+        android:id="@+id/ivInfoFaceImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:contentDescription="@string/front_image"/>
 
     <ImageView
-        android:id="@+id/ivInfoBackImage"
+        android:id="@+id/ivInfoFrontImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:contentDescription="@string/back_image"/>
 
     <ImageView
-        android:id="@+id/ivInfoFaceImage"
+        android:id="@+id/ivInfoBackImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:contentDescription="@string/face_image" />

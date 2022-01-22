@@ -55,6 +55,12 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
         mNationalityTV.setText(getString(R.string.Nationality, scannedDocument.getNationality()));
         mDocumentNumberTV.setText(getString(R.string.DocumentNumber, scannedDocument.getDocumentNumber()));
         mDateOfExpiryTV.setText(getString(R.string.DateOfExpiry, scannedDocument.getDateOfExpiry()));
+        Log.d("TAG", "FACEIMAGE: " + scannedDocument.getFaceImage());
+        loadImageFromStorage(scannedDocument.getFaceImage(), mFaceImage);
+        Log.d("TAG", "FRONTIMAGE: " + scannedDocument.getFrontImage());
+        loadImageFromStorage(scannedDocument.getFrontImage(), mFrontImage);
+        Log.d("TAG", "BACKIMAGE: " + scannedDocument.getBackImage());
+        loadImageFromStorage(scannedDocument.getBackImage(), mBackImage);
 
     }
 
@@ -62,7 +68,7 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
     {
         BitmapFactory.Options options = new BitmapFactory.Options();
         Bitmap bitmap;
-        options.inSampleSize = 16;
+        options.inSampleSize = 8;
         bitmap = BitmapFactory.decodeFile(path, options);
 
         //Bitmap bitmap2 = Bitmap.createScaledBitmap(bitmap1,  600 ,600, true);//this bitmap2 you can use only for display
