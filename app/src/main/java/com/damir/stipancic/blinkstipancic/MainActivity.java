@@ -133,9 +133,9 @@ public class MainActivity extends AppCompatActivity {
                 mRecognizerBundle.loadFromIntent(data);
                 BlinkIdCombinedRecognizer.Result result = mRecognizer.getResult();
 
-                String fullDocumentFrontImageLocation = storeImage("fullDocumentImageFront", result.getFullDocumentFrontImage());
-                String fullDocumentBackImageLocation = storeImage("fullDocumentImageBack", result.getFullDocumentBackImage());
-                String faceImageLocation = storeImage("faceImage", result.getFaceImage());
+                String fullDocumentFrontImageLocation = storeImage("fullDocumentImageFront", result.getFullDocumentFrontImage(), result.getPersonalIdNumber());
+                String fullDocumentBackImageLocation = storeImage("fullDocumentImageBack", result.getFullDocumentBackImage(), result.getPersonalIdNumber());
+                String faceImageLocation = storeImage("faceImage", result.getFaceImage(), result.getPersonalIdNumber());
 
                 Log.d("TAG", "faceImage: " + faceImageLocation);
                 Log.d("TAG", "frontImage: " + fullDocumentFrontImageLocation);
@@ -157,13 +157,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String storeImage(String imageName, Image image) {
+    private String storeImage(String imageName, Image image, String OIB) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         Bitmap bitmapImage;
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,imageName + ".jpg");
+        File mypath=new File(directory,imageName + OIB + ".jpg");
 
         FileOutputStream fos = null;
         try {
