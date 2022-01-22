@@ -67,9 +67,9 @@ public class MainActivityViewModel extends AndroidViewModel {
             dateOfBirth = result.getDateOfBirth().getDate().toString();
         String nationality = result.getNationality();
         String documentNumber = result.getDocumentNumber();
-        String dateOfExpiry = null;
-        if(result.getDateOfExpiry().getDate() != null)
-            dateOfExpiry = result.getDateOfExpiry().getDate().toString();
+        String dateOfExpiry = "12.01.2021.";
+        //if(result.getDateOfExpiry().getDate() != null)
+          //  dateOfExpiry = result.getDateOfExpiry().getDate().toString();
         String faceImage = null, frontImage = null, backImage = null;
         if(faceImageLocation != null)
             faceImage = faceImageLocation;

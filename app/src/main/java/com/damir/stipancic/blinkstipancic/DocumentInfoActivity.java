@@ -9,9 +9,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
 import com.damir.stipancic.blinkstipancic.viewModels.DocumentInfoActivityViewModel;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DocumentInfoActivity extends AppCompatActivity implements OnFinishedListener{
 
@@ -80,10 +85,31 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
     @Override
     public void onFinished(ScannedDocumentEntity scannedDocument) {
         displayInformation(scannedDocument);
+        checkDateOfExpiry(scannedDocument.getDateOfExpiry());
     }
 
     @Override
     public void onFailure(Throwable t) {
 
+    }
+
+    private void checkDateOfExpiry(String dateOfExpiry) {
+        Date expDate = toDate(dateOfExpiry);
+        if (new Date().after(expDate))
+            Toast.makeText(this, "ID HAS EXPIRED!", Toast.LENGTH_LONG).show();
+    }
+
+    private Date toDate(String dateOfExpiry) {
+        Date expDate = null;
+        Log.d("TAG", "toExpDate: " + dateOfExpiry);
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy.");
+        try {
+            expDate = format.parse(dateOfExpiry);
+            Log.d("TAG", "toDate: " + expDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return expDate;
     }
 }
