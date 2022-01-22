@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
-import com.damir.stipancic.blinkstipancic.data.ScannedDocumentDatabase;
-import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
+import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentDatabase;
+import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class MainActivityViewModel extends AndroidViewModel {
             @Override
             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<ScannedDocumentEntity> scannedDocumentEntities) {
                 Log.d("TAG", "SIZE: " + scannedDocumentEntities.size());
-                adapter.setList(scannedDocumentEntities);
+                //adapter.setList(scannedDocumentEntities);
             }
 
             @Override
@@ -52,7 +52,8 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public String getOIB(int position, MainActivityRecyclerAdapter adapter){
-        return adapter.getList().get(position).getOIB();
+        //return adapter.getList().get(position).getOIB();
+        return null;
     }
 
     public void insertDocumentToDB(BlinkIdCombinedRecognizer.Result result, MainActivityRecyclerAdapter adapter, String faceImageLocation, String frontImageLocation, String backImageLocation){

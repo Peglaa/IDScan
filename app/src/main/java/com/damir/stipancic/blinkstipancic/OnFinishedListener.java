@@ -1,6 +1,6 @@
 package com.damir.stipancic.blinkstipancic;
 
-import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
+import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 
 public interface OnFinishedListener {
 

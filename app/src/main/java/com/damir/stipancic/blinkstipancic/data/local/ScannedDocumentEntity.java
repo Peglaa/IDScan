@@ -1,4 +1,4 @@
-package com.damir.stipancic.blinkstipancic.data;
+package com.damir.stipancic.blinkstipancic.data.local;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

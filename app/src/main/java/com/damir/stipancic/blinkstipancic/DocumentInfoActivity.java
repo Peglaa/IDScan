@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.damir.stipancic.blinkstipancic.data.ScannedDocumentEntity;
+import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 import com.damir.stipancic.blinkstipancic.viewModels.DocumentInfoActivityViewModel;
 
 import java.text.ParseException;
