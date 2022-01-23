@@ -11,14 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.damir.stipancic.blinkstipancic.contract.Contract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
-import com.damir.stipancic.blinkstipancic.viewModels.DocumentInfoActivityViewModel;
+import com.damir.stipancic.blinkstipancic.presenters.DocumentInfoActivityPresenter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DocumentInfoActivity extends AppCompatActivity implements OnFinishedListener{
+public class DocumentInfoActivity extends AppCompatActivity implements Contract.View.DocumentInfoActivityView{
 
     private TextView mFirstNameTV, mLastNameTV, mGenderTV, mDateOfBirthTV, mOibTV, mNationalityTV, mDocumentNumberTV, mDateOfExpiryTV;
     private ImageView mFrontImage, mFaceImage, mBackImage;
@@ -28,12 +29,12 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_info);
 
+        setupLayout();
+        DocumentInfoActivityPresenter mPresenter = new DocumentInfoActivityPresenter(this);
         Intent intent = getIntent();
         String mOIB = intent.getStringExtra("OIB");
 
-        DocumentInfoActivityViewModel infoViewModel = new DocumentInfoActivityViewModel(getApplication());
-        infoViewModel.getDocumentByOIB(mOIB, this);
-        setupLayout();
+        mPresenter.getDocumentByOIBFromDB(mOIB);
 
     }
 
@@ -82,21 +83,10 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
 
     }
 
-    @Override
-    public void onFinished(ScannedDocumentEntity scannedDocument) {
-        displayInformation(scannedDocument);
-        checkDateOfExpiry(scannedDocument.getDateOfExpiry());
-    }
-
-    @Override
-    public void onFailure(Throwable t) {
-
-    }
-
     private void checkDateOfExpiry(String dateOfExpiry) {
         Date expDate = toDate(dateOfExpiry);
         if (new Date().after(expDate))
-            Toast.makeText(this, "ID HAS EXPIRED!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "ID HAS EXPIRED!", Toast.LENGTH_SHORT).show();
     }
 
     private Date toDate(String dateOfExpiry) {
@@ -111,5 +101,16 @@ public class DocumentInfoActivity extends AppCompatActivity implements OnFinishe
         }
 
         return expDate;
+    }
+
+    @Override
+    public void setDataToView(ScannedDocumentEntity scannedDocument) {
+        displayInformation(scannedDocument);
+        checkDateOfExpiry(scannedDocument.getDateOfExpiry());
+    }
+
+    @Override
+    public void getDocument(ScannedDocumentEntity scannedDocumentEntity) {
+        setDataToView(scannedDocumentEntity);
     }
 }

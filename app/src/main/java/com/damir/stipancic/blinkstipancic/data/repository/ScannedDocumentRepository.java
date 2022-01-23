@@ -1,6 +1,5 @@
 package com.damir.stipancic.blinkstipancic.data.repository;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -25,14 +24,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ScannedDocumentRepository implements Contract.Repository{
 
-    private ScannedDocumentDatabase mDocumentDatabase;
+    private final ScannedDocumentDatabase mDocumentDatabase;
 
     public ScannedDocumentRepository(Context context) {
         this.mDocumentDatabase = ScannedDocumentDatabase.getInstance(context);
     }
 
     @Override
-    public void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, OnFinishedListener onFinishedListener) {
+    public void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, RepositoryOnFinishedListener onFinishedListener) {
         Log.d("TAG", "OIB: " + result.getPersonalIdNumber());
         String firstName = result.getFirstName();
         String lastName = result.getLastName();
@@ -43,9 +42,9 @@ public class ScannedDocumentRepository implements Contract.Repository{
             dateOfBirth = result.getDateOfBirth().getDate().toString();
         String nationality = result.getNationality();
         String documentNumber = result.getDocumentNumber();
-        String dateOfExpiry = "12.01.2021.";
-        //if(result.getDateOfExpiry().getDate() != null)
-        //  dateOfExpiry = result.getDateOfExpiry().getDate().toString();
+        String dateOfExpiry = result.getDateOfExpiry().toString();
+        if(result.getDateOfExpiry().getDate() != null)
+          dateOfExpiry = result.getDateOfExpiry().getDate().toString();
         String faceImage = storeImage("faceImage", result.getFaceImage(), result.getPersonalIdNumber(), context);
         String frontImage = storeImage("frontImage", result.getFullDocumentFrontImage(), result.getPersonalIdNumber(), context);
         String backImage = storeImage("backImage", result.getFullDocumentBackImage(), result.getPersonalIdNumber(), context);
@@ -71,7 +70,7 @@ public class ScannedDocumentRepository implements Contract.Repository{
     }
 
     @Override
-    public void getScannedDocumentListFromDB(OnFinishedListener onFinishedListener) {
+    public void getScannedDocumentListFromDB(RepositoryOnFinishedListener onFinishedListener) {
         mDocumentDatabase.documentDAO().loadAllDocuments().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<ScannedDocumentEntity>>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
@@ -89,6 +88,28 @@ public class ScannedDocumentRepository implements Contract.Repository{
 
             }
         });
+    }
+
+    public void getDocumentByOIB(String oib, Contract.Presenter.PresenterOnFinishedListener listener){
+        mDocumentDatabase.documentDAO().loadDocumentByOIB(oib).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<ScannedDocumentEntity>() {
+            @Override
+            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull ScannedDocumentEntity scannedDocumentEntity) {
+
+                listener.onFinished(scannedDocumentEntity);
+
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+            }
+        });
+
     }
 
     private String storeImage(String imageName, Image image, String OIB, Context context) {

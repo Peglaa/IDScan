@@ -12,18 +12,24 @@ public interface Contract {
 
     interface Repository {
 
-        interface OnFinishedListener{
+        interface RepositoryOnFinishedListener{
 
             void onFinished(List<ScannedDocumentEntity> scannedDocumentEntities);
             void onFailure(Throwable t);
         }
 
-        void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, OnFinishedListener onFinishedListener);
-        void getScannedDocumentListFromDB(OnFinishedListener onFinishedListener);
+        void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, RepositoryOnFinishedListener onFinishedListener);
+        void getScannedDocumentListFromDB(RepositoryOnFinishedListener onFinishedListener);
 
     }
 
     interface Presenter {
+
+        interface PresenterOnFinishedListener{
+
+            void onFinished(ScannedDocumentEntity scannedDocumentEntity);
+            void onFailure(Throwable t);
+        }
 
         interface MainActivityPresenter {
 
@@ -34,6 +40,8 @@ public interface Contract {
         }
 
         interface DocumentInfoActivityPresenter {
+
+            void getDocumentByOIBFromDB(String OIB);
 
         }
     }
@@ -55,8 +63,9 @@ public interface Contract {
 
         interface DocumentInfoActivityView {
 
-            void setDataToView();
+            void setDataToView(ScannedDocumentEntity scannedDocumentEntity);
 
+            void getDocument(ScannedDocumentEntity scannedDocumentEntity);
         }
     }
 }

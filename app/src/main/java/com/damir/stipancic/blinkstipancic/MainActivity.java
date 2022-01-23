@@ -10,13 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -26,13 +22,8 @@ import com.damir.stipancic.blinkstipancic.presenters.MainActivityPresenter;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
-import com.microblink.image.Image;
 import com.microblink.uisettings.ActivityRunner;
 import com.microblink.uisettings.BlinkIdUISettings;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements Contract.View.MainActivityView{
 
@@ -82,12 +73,9 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
 
     private void setupScanButton() {
         Button mScanBtn = findViewById(R.id.btnScan);
-        mScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestStoragePermission();
-                startScanning();
-            }
+        mScanBtn.setOnClickListener(view -> {
+            requestStoragePermission();
+            startScanning();
         });
     }
 
@@ -167,6 +155,6 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
 
     @Override
     public void updateRecyclerData() {
-
+        mAdapter.notifyDataSetChanged();
     }
 }

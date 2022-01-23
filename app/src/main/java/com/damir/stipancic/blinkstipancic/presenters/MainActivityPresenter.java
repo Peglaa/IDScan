@@ -1,7 +1,6 @@
 package com.damir.stipancic.blinkstipancic.presenters;
 
 import com.damir.stipancic.blinkstipancic.BlinkApplication;
-import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerViewHolder;
 import com.damir.stipancic.blinkstipancic.contract.Contract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
@@ -11,10 +10,10 @@ import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecogn
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivityPresenter implements Contract.Presenter.MainActivityPresenter, Contract.Repository.OnFinishedListener {
+public class MainActivityPresenter implements Contract.Presenter.MainActivityPresenter, Contract.Repository.RepositoryOnFinishedListener {
 
-    private ScannedDocumentRepository mScannedDocumentRepository;
-    private Contract.View.MainActivityView mMainActivityView;
+    private final ScannedDocumentRepository mScannedDocumentRepository;
+    private final Contract.View.MainActivityView mMainActivityView;
     private final List<ScannedDocumentEntity> mScannedDocuments; //List used by RecyclerView
 
     public MainActivityPresenter(Contract.View.MainActivityView mainView) {

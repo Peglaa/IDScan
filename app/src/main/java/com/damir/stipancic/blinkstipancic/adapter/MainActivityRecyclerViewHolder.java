@@ -11,7 +11,7 @@ import com.damir.stipancic.blinkstipancic.contract.Contract;
 
 public class MainActivityRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, Contract.View.MainActivityView.itemView{
 
-    private TextView tvDocument;
+    private final TextView tvDocument;
     private final MainActivityRecyclerAdapter.OnDocumentClick mOnDocumentClick;
 
     public MainActivityRecyclerViewHolder(@NonNull View itemView, MainActivityRecyclerAdapter.OnDocumentClick onDocumentClick) {
