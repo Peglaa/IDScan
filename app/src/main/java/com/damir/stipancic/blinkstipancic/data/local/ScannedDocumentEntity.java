@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "scanned_document")
 public class ScannedDocumentEntity {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     private String firstName;
 
     private String lastName;
@@ -15,7 +18,6 @@ public class ScannedDocumentEntity {
     private String gender;
 
     @NonNull
-    @PrimaryKey
     private String OIB;
 
     private String dateOfBirth;
@@ -57,6 +59,14 @@ public class ScannedDocumentEntity {
         this.frontImage = frontImage;
         this.backImage = backImage;
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {

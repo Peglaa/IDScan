@@ -25,4 +25,7 @@ public interface ScannedDocumentDAO {
 
     @Query("SELECT * FROM scanned_document WHERE OIB = :oib")
     Single<ScannedDocumentEntity> loadDocumentByOIB(String oib);
+
+    @Query("DELETE FROM scanned_document where id NOT IN (SELECT id from scanned_document ORDER BY id DESC LIMIT 5)")
+    Completable deleteExtraDocument();
 }

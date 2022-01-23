@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -59,7 +60,22 @@ public class ScannedDocumentRepository implements Contract.Repository{
 
             @Override
             public void onComplete() {
-                getScannedDocumentListFromDB(onFinishedListener);
+                mDocumentDatabase.documentDAO().deleteExtraDocument().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        getScannedDocumentListFromDB(onFinishedListener);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        getScannedDocumentListFromDB(onFinishedListener);
+                    }
+                });
             }
 
             @Override
