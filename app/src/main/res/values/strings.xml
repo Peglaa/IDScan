@@ -11,4 +11,5 @@
     <string name="Nationality">Nationality: %1$s</string>
     <string name="DocumentNumber">Document Number: %1$s</string>
     <string name="DateOfExpiry">Date of expiry: %1$s</string>
+    <string name="scan">SCAN</string>
 </resources>

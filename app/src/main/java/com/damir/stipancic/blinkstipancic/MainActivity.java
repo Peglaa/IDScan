@@ -4,56 +4,45 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
-import com.damir.stipancic.blinkstipancic.viewModels.MainActivityViewModel;
+import com.damir.stipancic.blinkstipancic.contract.Contract;
+import com.damir.stipancic.blinkstipancic.presenters.MainActivityPresenter;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
-import com.microblink.entities.recognizers.blinkid.generic.classinfo.ClassInfo;
-import com.microblink.image.Image;
 import com.microblink.uisettings.ActivityRunner;
 import com.microblink.uisettings.BlinkIdUISettings;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+public class MainActivity extends AppCompatActivity implements Contract.View.MainActivityView{
 
-public class MainActivity extends AppCompatActivity {
-
-    private MainActivityViewModel mMainActivityViewModel;
     private final static int MY_REQUEST_CODE = 100;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 123;
     private BlinkIdCombinedRecognizer mRecognizer;
     private RecognizerBundle mRecognizerBundle;
     private MainActivityRecyclerAdapter.OnDocumentClick mListener;
     private MainActivityRecyclerAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private MainActivityPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        requestStoragePermission();
+        mPresenter = new MainActivityPresenter(this);
         setupScanButton();
-        setupViewModel();
         setupOnClickListener();
         setupRecycler();
         fetchRecyclerData();
@@ -64,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mListener = (v, position) -> {
 
             Intent intent = new Intent(v.getContext(), DocumentInfoActivity.class);
-            String OIB = mMainActivityViewModel.getOIB(position, mAdapter);
+            String OIB = mPresenter.getOIB(position);
             intent.putExtra("OIB", OIB);
             startActivity(intent);
 
@@ -84,28 +73,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupScanButton() {
         Button mScanBtn = findViewById(R.id.btnScan);
-        mScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startScanning();
-            }
+        mScanBtn.setOnClickListener(view -> {
+            requestStoragePermission();
+            startScanning();
         });
     }
 
-    private void setupViewModel() {
-        mMainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
-    }
-
     private void setupRecycler() {
-        RecyclerView recyclerView = findViewById(R.id.rvMainActivity);
+        recyclerView = findViewById(R.id.rvMainActivity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        mAdapter = new MainActivityRecyclerAdapter(mListener);
-        recyclerView.setAdapter(mAdapter);
     }
 
     private void fetchRecyclerData() {
-        mMainActivityViewModel.getDocumentsFromDB(mAdapter);
+        mPresenter.getScannedDocumentListFromDB();
     }
 
     private void setupBlinkRecognizer() {
@@ -133,54 +114,17 @@ public class MainActivity extends AppCompatActivity {
                 mRecognizerBundle.loadFromIntent(data);
                 BlinkIdCombinedRecognizer.Result result = mRecognizer.getResult();
 
-                String fullDocumentFrontImageLocation = storeImage("fullDocumentImageFront", result.getFullDocumentFrontImage(), result.getPersonalIdNumber());
-                String fullDocumentBackImageLocation = storeImage("fullDocumentImageBack", result.getFullDocumentBackImage(), result.getPersonalIdNumber());
-                String faceImageLocation = storeImage("faceImage", result.getFaceImage(), result.getPersonalIdNumber());
-
-                Log.d("TAG", "faceImage: " + faceImageLocation);
-                Log.d("TAG", "frontImage: " + fullDocumentFrontImageLocation);
-                Log.d("TAG", "backImage: " + fullDocumentBackImageLocation);
-
-
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
                     // Send result to ViewModel and create a class object to store in Room
-                    mMainActivityViewModel.insertDocumentToDB(result, mAdapter, faceImageLocation, fullDocumentFrontImageLocation, fullDocumentBackImageLocation);
+                    mPresenter.insertDocumentToDB(result);
                     Intent intent = new Intent(this, DocumentInfoActivity.class);
                     String OIB = result.getPersonalIdNumber();
                     intent.putExtra("OIB", OIB);
                     startActivity(intent);
 
                 }
-
-
             }
         }
-    }
-
-    private String storeImage(String imageName, Image image, String OIB) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        Bitmap bitmapImage;
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,imageName + OIB + ".jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage = image.convertToBitmap();
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return mypath.getPath();
     }
 
     @Override
@@ -196,6 +140,21 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Write external storage permission is required!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
 
+    @Override
+    public void setDataToRecyclerView() {
+        mAdapter = new MainActivityRecyclerAdapter(mPresenter, mListener);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onResponseFailure(Throwable t) {
+
+    }
+
+    @Override
+    public void updateRecyclerData() {
+        mAdapter.notifyDataSetChanged();
     }
 }

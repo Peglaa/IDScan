@@ -1,4 +1,4 @@
-package com.damir.stipancic.blinkstipancic.data;
+package com.damir.stipancic.blinkstipancic.data.local;
 
 import android.content.Context;
 
