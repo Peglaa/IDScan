@@ -28,4 +28,5 @@ public interface ScannedDocumentDAO {
 
     @Query("DELETE FROM scanned_document where id NOT IN (SELECT id from scanned_document ORDER BY id DESC LIMIT 5)")
     Completable deleteExtraDocument();
+
 }
