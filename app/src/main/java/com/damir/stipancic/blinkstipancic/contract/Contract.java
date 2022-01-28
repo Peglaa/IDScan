@@ -51,8 +51,6 @@ public interface Contract {
         interface MainActivityView {
 
             void setDataToRecyclerView();
-            void onResponseFailure(Throwable t);
-            void updateRecyclerData();
 
             interface itemView{
 

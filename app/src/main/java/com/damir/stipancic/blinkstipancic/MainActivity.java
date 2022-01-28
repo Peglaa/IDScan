@@ -1,20 +1,14 @@
 package com.damir.stipancic.blinkstipancic;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
 import com.damir.stipancic.blinkstipancic.contract.Contract;
@@ -28,12 +22,10 @@ import com.microblink.uisettings.BlinkIdUISettings;
 public class MainActivity extends AppCompatActivity implements Contract.View.MainActivityView{
 
     private final static int MY_REQUEST_CODE = 100;
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 123;
     private BlinkIdCombinedRecognizer mRecognizer;
     private RecognizerBundle mRecognizerBundle;
     private MainActivityRecyclerAdapter.OnDocumentClick mListener;
-    private MainActivityRecyclerAdapter mAdapter;
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private MainActivityPresenter mPresenter;
 
     @Override
@@ -60,29 +52,15 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
         };
     }
 
-
-    private void requestStoragePermission() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // request write permission
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
-
-    }
-
     private void setupScanButton() {
         Button mScanBtn = findViewById(R.id.btnScan);
-        mScanBtn.setOnClickListener(view -> {
-            requestStoragePermission();
-            startScanning();
-        });
+        mScanBtn.setOnClickListener(view -> startScanning());
     }
 
     private void setupRecycler() {
-        recyclerView = findViewById(R.id.rvMainActivity);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        mRecyclerView = findViewById(R.id.rvMainActivity);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void fetchRecyclerData() {
@@ -128,33 +106,8 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // permission was granted
-                Toast.makeText(this, "Write external storage permission GRANTED!", Toast.LENGTH_SHORT).show();
-            } else {
-                // permission denied
-                Toast.makeText(this, "Write external storage permission is required!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
     public void setDataToRecyclerView() {
-        mAdapter = new MainActivityRecyclerAdapter(mPresenter, mListener);
-        recyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onResponseFailure(Throwable t) {
-
-    }
-
-    @Override
-    public void updateRecyclerData() {
-        mAdapter.notifyDataSetChanged();
+        MainActivityRecyclerAdapter mAdapter = new MainActivityRecyclerAdapter(mPresenter, mListener);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }
