@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.damir.stipancic.blinkstipancic.R;
-import com.damir.stipancic.blinkstipancic.contract.Contract;
 import com.damir.stipancic.blinkstipancic.contract.MainContract;
 
 public class MainRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, MainContract.View.itemView{

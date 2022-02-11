@@ -11,31 +11,38 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.damir.stipancic.blinkstipancic.DI.DependencyInjectorImpl;
 import com.damir.stipancic.blinkstipancic.R;
-import com.damir.stipancic.blinkstipancic.contract.Contract;
+import com.damir.stipancic.blinkstipancic.contract.InfoContract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
-import com.damir.stipancic.blinkstipancic.presenters.DocumentInfoActivityPresenter;
+import com.damir.stipancic.blinkstipancic.presenters.DocumentInfoPresenter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DocumentInfoActivity extends AppCompatActivity implements Contract.View.DocumentInfoActivityView{
+public class DocumentInfoActivity extends AppCompatActivity implements InfoContract.View {
 
     private TextView mFirstNameTV, mLastNameTV, mGenderTV, mDateOfBirthTV, mOibTV, mNationalityTV, mDocumentNumberTV, mDateOfExpiryTV;
     private ImageView mFrontImage, mFaceImage, mBackImage;
+    private InfoContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_info);
 
+        setPresenter(new DocumentInfoPresenter(this, new DependencyInjectorImpl()));
         setupLayout();
-        DocumentInfoActivityPresenter mPresenter = new DocumentInfoActivityPresenter(this);
         Intent intent = getIntent();
         int ID = intent.getIntExtra("ID", -1);
+        String OIB = intent.getStringExtra("OIB");
 
-        mPresenter.getDocumentByIDFromDB(ID);
+        if(ID != -1)
+            mPresenter.getDocumentByIDFromDB(ID);
+        else{
+            mPresenter.getDocumentByOIBFromDB(OIB);
+        }
 
     }
 
@@ -113,5 +120,10 @@ public class DocumentInfoActivity extends AppCompatActivity implements Contract.
     @Override
     public void getDocument(ScannedDocumentEntity scannedDocumentEntity) {
         setDataToView(scannedDocumentEntity);
+    }
+
+    @Override
+    public void setPresenter(InfoContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

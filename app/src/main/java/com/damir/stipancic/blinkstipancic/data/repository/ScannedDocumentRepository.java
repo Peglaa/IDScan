@@ -5,8 +5,8 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.damir.stipancic.blinkstipancic.OnFinishedListener;
-import com.damir.stipancic.blinkstipancic.contract.Contract;
+import com.damir.stipancic.blinkstipancic.contract.InfoContract;
+import com.damir.stipancic.blinkstipancic.contract.MainContract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentDatabase;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
@@ -32,7 +32,7 @@ public class ScannedDocumentRepository{
         this.mDocumentDatabase = ScannedDocumentDatabase.getInstance(context);
     }
 
-    public void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, OnFinishedListener onFinishedListener) {
+    public void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, MainContract.Presenter.OnFinishedListener onFinishedListener) {
         Log.d("TAG", "OIB: " + result.getPersonalIdNumber());
         String firstName = result.getFirstName();
         String lastName = result.getLastName();
@@ -85,7 +85,7 @@ public class ScannedDocumentRepository{
         });
     }
 
-    public void getScannedDocumentListFromDB(OnFinishedListener onFinishedListener) {
+    public void getScannedDocumentListFromDB(MainContract.Presenter.OnFinishedListener onFinishedListener) {
         mDocumentDatabase.documentDAO().loadAllDocuments().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<ScannedDocumentEntity>>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
@@ -105,8 +105,30 @@ public class ScannedDocumentRepository{
         });
     }
 
-    public void getDocumentByID(int id, Contract.Presenter.PresenterOnFinishedListener listener){
+    public void getDocumentByID(int id, InfoContract.Presenter.OnFinishedListener listener){
         mDocumentDatabase.documentDAO().loadDocumentByID(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<ScannedDocumentEntity>() {
+            @Override
+            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull ScannedDocumentEntity scannedDocumentEntity) {
+
+                listener.onFinished(scannedDocumentEntity);
+
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+            }
+        });
+
+    }
+
+    public void getDocumentByOIB(String OIB, InfoContract.Presenter.OnFinishedListener listener){
+        mDocumentDatabase.documentDAO().loadDocumentByOIB(OIB).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<ScannedDocumentEntity>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 
@@ -133,11 +155,11 @@ public class ScannedDocumentRepository{
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,imageName + OIB + ".jpg");
+        File myPath=new File(directory,imageName + OIB + ".jpg");
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(mypath);
+            fos = new FileOutputStream(myPath);
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage = image.convertToBitmap();
             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -150,6 +172,6 @@ public class ScannedDocumentRepository{
                 e.printStackTrace();
             }
         }
-        return mypath.getPath();
+        return myPath.getPath();
     }
 }

@@ -2,7 +2,6 @@ package com.damir.stipancic.blinkstipancic.presenters;
 
 import com.damir.stipancic.blinkstipancic.BlinkApplication;
 import com.damir.stipancic.blinkstipancic.DI.DependencyInjector;
-import com.damir.stipancic.blinkstipancic.OnFinishedListener;
 import com.damir.stipancic.blinkstipancic.adapter.MainRecyclerViewHolder;
 import com.damir.stipancic.blinkstipancic.contract.MainContract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
@@ -12,7 +11,7 @@ import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecogn
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainPresenter implements MainContract.Presenter, OnFinishedListener {
+public class MainPresenter implements MainContract.Presenter, MainContract.Presenter.OnFinishedListener {
 
     private MainContract.View mView;
     private final ScannedDocumentRepository mRepository;

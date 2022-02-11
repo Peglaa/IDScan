@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private final static int MY_REQUEST_CODE = 100;
     private final static String INTENT_ID_EXTRA = "ID";
+    private final static String INTENT_OIB_EXTRA = "OIB";
     private BlinkIdCombinedRecognizer mRecognizer;
     private RecognizerBundle mRecognizerBundle;
     private MainRecyclerAdapter.OnDocumentClick mListener;
@@ -66,10 +67,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
-    private void fetchRecyclerData() {
-        mPresenter.getData();
-    }
-
     private void setupBlinkRecognizer() {
         mRecognizer = new BlinkIdCombinedRecognizer();
         mRecognizer.setReturnFullDocumentImage(true);
@@ -100,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     mPresenter.insertDataToDB(result);
                     Intent intent = new Intent(this, DocumentInfoActivity.class);
                     String OIB = result.getPersonalIdNumber();
-                    intent.putExtra("OIB", OIB);
+                    intent.putExtra(INTENT_OIB_EXTRA, OIB);
                     startActivity(intent);
 
                 }
