@@ -1,4 +1,4 @@
-package com.damir.stipancic.blinkstipancic;
+package com.damir.stipancic.blinkstipancic.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.damir.stipancic.blinkstipancic.R;
 import com.damir.stipancic.blinkstipancic.contract.Contract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 import com.damir.stipancic.blinkstipancic.presenters.DocumentInfoActivityPresenter;
@@ -32,9 +33,9 @@ public class DocumentInfoActivity extends AppCompatActivity implements Contract.
         setupLayout();
         DocumentInfoActivityPresenter mPresenter = new DocumentInfoActivityPresenter(this);
         Intent intent = getIntent();
-        String mOIB = intent.getStringExtra("OIB");
+        int ID = intent.getIntExtra("ID", -1);
 
-        mPresenter.getDocumentByOIBFromDB(mOIB);
+        mPresenter.getDocumentByIDFromDB(ID);
 
     }
 

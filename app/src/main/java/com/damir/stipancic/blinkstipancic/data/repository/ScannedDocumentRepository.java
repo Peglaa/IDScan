@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.damir.stipancic.blinkstipancic.OnFinishedListener;
 import com.damir.stipancic.blinkstipancic.contract.Contract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentDatabase;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
@@ -23,7 +24,7 @@ import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class ScannedDocumentRepository implements Contract.Repository{
+public class ScannedDocumentRepository{
 
     private final ScannedDocumentDatabase mDocumentDatabase;
 
@@ -31,8 +32,7 @@ public class ScannedDocumentRepository implements Contract.Repository{
         this.mDocumentDatabase = ScannedDocumentDatabase.getInstance(context);
     }
 
-    @Override
-    public void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, RepositoryOnFinishedListener onFinishedListener) {
+    public void insertDataToDB(BlinkIdCombinedRecognizer.Result result, Context context, OnFinishedListener onFinishedListener) {
         Log.d("TAG", "OIB: " + result.getPersonalIdNumber());
         String firstName = result.getFirstName();
         String lastName = result.getLastName();
@@ -85,8 +85,7 @@ public class ScannedDocumentRepository implements Contract.Repository{
         });
     }
 
-    @Override
-    public void getScannedDocumentListFromDB(RepositoryOnFinishedListener onFinishedListener) {
+    public void getScannedDocumentListFromDB(OnFinishedListener onFinishedListener) {
         mDocumentDatabase.documentDAO().loadAllDocuments().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<ScannedDocumentEntity>>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
@@ -106,8 +105,8 @@ public class ScannedDocumentRepository implements Contract.Repository{
         });
     }
 
-    public void getDocumentByOIB(String oib, Contract.Presenter.PresenterOnFinishedListener listener){
-        mDocumentDatabase.documentDAO().loadDocumentByOIB(oib).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<ScannedDocumentEntity>() {
+    public void getDocumentByID(int id, Contract.Presenter.PresenterOnFinishedListener listener){
+        mDocumentDatabase.documentDAO().loadDocumentByID(id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<ScannedDocumentEntity>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 

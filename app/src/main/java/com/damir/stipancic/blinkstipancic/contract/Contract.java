@@ -2,7 +2,7 @@ package com.damir.stipancic.blinkstipancic.contract;
 
 import android.content.Context;
 
-import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerViewHolder;
+import com.damir.stipancic.blinkstipancic.adapter.MainRecyclerViewHolder;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
 
@@ -35,13 +35,13 @@ public interface Contract {
 
             void insertDocumentToDB(BlinkIdCombinedRecognizer.Result result);
             void getScannedDocumentListFromDB();
-            void onBindArticleData(MainActivityRecyclerViewHolder holder, int position);
+            void onBindArticleData(MainRecyclerViewHolder holder, int position);
             int getDocumentCount();
         }
 
         interface DocumentInfoActivityPresenter {
 
-            void getDocumentByOIBFromDB(String OIB);
+            void getDocumentByIDFromDB(int ID);
 
         }
     }

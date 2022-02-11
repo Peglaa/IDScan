@@ -26,7 +26,7 @@ public class DocumentInfoActivityPresenter implements Contract.Presenter.Documen
     }
 
     @Override
-    public void getDocumentByOIBFromDB(String OIB) {
-        mScannedDocumentRepository.getDocumentByOIB(OIB, this);
+    public void getDocumentByIDFromDB(int ID) {
+        mScannedDocumentRepository.getDocumentByID(ID, this);
     }
 }

@@ -1,4 +1,4 @@
-package com.damir.stipancic.blinkstipancic;
+package com.damir.stipancic.blinkstipancic.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -10,43 +10,46 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.damir.stipancic.blinkstipancic.adapter.MainActivityRecyclerAdapter;
-import com.damir.stipancic.blinkstipancic.contract.Contract;
-import com.damir.stipancic.blinkstipancic.presenters.MainActivityPresenter;
+import com.damir.stipancic.blinkstipancic.DI.DependencyInjectorImpl;
+import com.damir.stipancic.blinkstipancic.R;
+import com.damir.stipancic.blinkstipancic.adapter.MainRecyclerAdapter;
+import com.damir.stipancic.blinkstipancic.contract.MainContract;
+import com.damir.stipancic.blinkstipancic.presenters.MainPresenter;
 import com.microblink.entities.recognizers.Recognizer;
 import com.microblink.entities.recognizers.RecognizerBundle;
 import com.microblink.entities.recognizers.blinkid.generic.BlinkIdCombinedRecognizer;
 import com.microblink.uisettings.ActivityRunner;
 import com.microblink.uisettings.BlinkIdUISettings;
 
-public class MainActivity extends AppCompatActivity implements Contract.View.MainActivityView{
+public class MainActivity extends AppCompatActivity implements MainContract.View{
 
     private final static int MY_REQUEST_CODE = 100;
+    private final static String INTENT_ID_EXTRA = "ID";
     private BlinkIdCombinedRecognizer mRecognizer;
     private RecognizerBundle mRecognizerBundle;
-    private MainActivityRecyclerAdapter.OnDocumentClick mListener;
+    private MainRecyclerAdapter.OnDocumentClick mListener;
     private RecyclerView mRecyclerView;
-    private MainActivityPresenter mPresenter;
+    private MainContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPresenter = new MainActivityPresenter(this);
+        setPresenter(new MainPresenter(this, new DependencyInjectorImpl()));
         setupScanButton();
         setupOnClickListener();
         setupRecycler();
-        fetchRecyclerData();
         setupBlinkRecognizer();
+        mPresenter.onViewCreated();
     }
 
     private void setupOnClickListener() {
         mListener = (v, position) -> {
 
             Intent intent = new Intent(v.getContext(), DocumentInfoActivity.class);
-            String OIB = mPresenter.getOIB(position);
-            intent.putExtra("OIB", OIB);
+            int ID = mPresenter.getId(position);
+            intent.putExtra(INTENT_ID_EXTRA, ID);
             startActivity(intent);
 
         };
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
     }
 
     private void fetchRecyclerData() {
-        mPresenter.getScannedDocumentListFromDB();
+        mPresenter.getData();
     }
 
     private void setupBlinkRecognizer() {
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
 
                 if (result.getResultState() == Recognizer.Result.State.Valid) {
                     // Send result to ViewModel and create a class object to store in Room
-                    mPresenter.insertDocumentToDB(result);
+                    mPresenter.insertDataToDB(result);
                     Intent intent = new Intent(this, DocumentInfoActivity.class);
                     String OIB = result.getPersonalIdNumber();
                     intent.putExtra("OIB", OIB);
@@ -107,7 +110,12 @@ public class MainActivity extends AppCompatActivity implements Contract.View.Mai
 
     @Override
     public void setDataToRecyclerView() {
-        MainActivityRecyclerAdapter mAdapter = new MainActivityRecyclerAdapter(mPresenter, mListener);
+        MainRecyclerAdapter mAdapter = new MainRecyclerAdapter(mPresenter, mListener);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void setPresenter(MainContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

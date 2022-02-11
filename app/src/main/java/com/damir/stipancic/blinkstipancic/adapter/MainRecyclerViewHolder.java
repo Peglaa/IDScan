@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.damir.stipancic.blinkstipancic.R;
 import com.damir.stipancic.blinkstipancic.contract.Contract;
+import com.damir.stipancic.blinkstipancic.contract.MainContract;
 
-public class MainActivityRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, Contract.View.MainActivityView.itemView{
+public class MainRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, MainContract.View.itemView{
 
     private final TextView tvDocument;
-    private final MainActivityRecyclerAdapter.OnDocumentClick mOnDocumentClick;
+    private final MainRecyclerAdapter.OnDocumentClick mOnDocumentClick;
 
-    public MainActivityRecyclerViewHolder(@NonNull View itemView, MainActivityRecyclerAdapter.OnDocumentClick onDocumentClick) {
+    public MainRecyclerViewHolder(@NonNull View itemView, MainRecyclerAdapter.OnDocumentClick onDocumentClick) {
         super(itemView);
         this.mOnDocumentClick = onDocumentClick;
         itemView.setOnClickListener(this);
@@ -27,7 +28,7 @@ public class MainActivityRecyclerViewHolder extends RecyclerView.ViewHolder impl
     }
 
     @Override
-    public void setTitle(String title) {
-        tvDocument.setText(title);
+    public void setTitle(int title) {
+        tvDocument.setText(String.valueOf(title));
     }
 }
