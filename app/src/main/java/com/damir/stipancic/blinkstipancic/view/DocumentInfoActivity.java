@@ -126,4 +126,10 @@ public class DocumentInfoActivity extends AppCompatActivity implements InfoContr
     public void setPresenter(InfoContract.Presenter presenter) {
         mPresenter = presenter;
     }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDestroy();
+        super.onDestroy();
+    }
 }
