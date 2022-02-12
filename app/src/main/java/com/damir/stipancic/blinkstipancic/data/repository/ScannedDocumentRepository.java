@@ -50,7 +50,17 @@ public class ScannedDocumentRepository{
         String frontImage = storeImage("frontImage", result.getFullDocumentFrontImage(), result.getPersonalIdNumber(), context);
         String backImage = storeImage("backImage", result.getFullDocumentBackImage(), result.getPersonalIdNumber(), context);
 
-        ScannedDocumentEntity document = new ScannedDocumentEntity(firstName, lastName, gender, OIB, dateOfBirth, nationality, documentNumber, dateOfExpiry, faceImage, frontImage, backImage);
+        ScannedDocumentEntity document = new ScannedDocumentEntity.ScannedDocumentBuilder(firstName, lastName)
+                .OIB(OIB)
+                .gender(gender)
+                .dateOfBirth(dateOfBirth)
+                .nationality(nationality)
+                .documentNumber(documentNumber)
+                .dateOfExpiry(dateOfExpiry)
+                .faceImage(faceImage)
+                .frontImage(frontImage)
+                .backImage(backImage)
+                .build();
 
         mDocumentDatabase.documentDAO().insertDocument(document).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CompletableObserver() {
             @Override

@@ -1,6 +1,5 @@
 package com.damir.stipancic.blinkstipancic.data.local;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,53 +10,45 @@ public class ScannedDocumentEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String firstName;
+    private String firstName = "";
 
-    private String lastName;
+    private String lastName = "";
 
-    private String gender;
+    private String gender = "";
 
-    @NonNull
-    private String OIB;
+    private String OIB = "";
 
-    private String dateOfBirth;
+    private String dateOfBirth = "";
 
-    private String nationality;
+    private String nationality = "";
 
-    private String documentNumber;
+    private String documentNumber = "";
 
-    private String dateOfExpiry;
+    private String dateOfExpiry = "";
 
-    private String faceImage;
+    private String faceImage = "";
 
-    private String frontImage;
+    private String frontImage = "";
 
-    private String backImage;
+    private String backImage = "";
+
+    public ScannedDocumentEntity() {
+    }
 
     public ScannedDocumentEntity(
-            String firstName,
-            String lastName,
-            String gender,
-            @NonNull String OIB,
-            String dateOfBirth,
-            String nationality,
-            String documentNumber,
-            String dateOfExpiry,
-            String faceImage,
-            String frontImage,
-            String backImage){
+            ScannedDocumentBuilder builder){
 
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.OIB = OIB;
-        this.dateOfBirth = dateOfBirth;
-        this.nationality = nationality;
-        this.documentNumber = documentNumber;
-        this.dateOfExpiry = dateOfExpiry;
-        this.faceImage = faceImage;
-        this.frontImage = frontImage;
-        this.backImage = backImage;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.gender = builder.gender;
+        this.OIB = builder.OIB;
+        this.dateOfBirth = builder.dateOfBirth;
+        this.nationality = builder.nationality;
+        this.documentNumber = builder.documentNumber;
+        this.dateOfExpiry = builder.dateOfExpiry;
+        this.faceImage = builder.faceImage;
+        this.frontImage = builder.frontImage;
+        this.backImage = builder.backImage;
 
     }
 
@@ -73,88 +64,167 @@ public class ScannedDocumentEntity {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    @NonNull
     public String getOIB() {
         return OIB;
-    }
-
-    public void setOIB(@NonNull String OIB) {
-        this.OIB = OIB;
     }
 
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
     public String getNationality() {
         return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
     }
 
     public String getDocumentNumber() {
         return documentNumber;
     }
 
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
     public String getDateOfExpiry() {
         return dateOfExpiry;
-    }
-
-    public void setDateOfExpiry(String dateOfExpiry) {
-        this.dateOfExpiry = dateOfExpiry;
     }
 
     public String getFaceImage() {
         return faceImage;
     }
 
-    public void setFaceImage(String faceImage) {
-        this.faceImage = faceImage;
-    }
-
     public String getFrontImage() {
         return frontImage;
-    }
-
-    public void setFrontImage(String frontImage) {
-        this.frontImage = frontImage;
     }
 
     public String getBackImage() {
         return backImage;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setOIB(String OIB) {
+        this.OIB = OIB;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+    public void setDateOfExpiry(String dateOfExpiry) {
+        this.dateOfExpiry = dateOfExpiry;
+    }
+
+    public void setFaceImage(String faceImage) {
+        this.faceImage = faceImage;
+    }
+
+    public void setFrontImage(String frontImage) {
+        this.frontImage = frontImage;
+    }
+
     public void setBackImage(String backImage) {
         this.backImage = backImage;
+    }
+
+    public static class ScannedDocumentBuilder{
+
+        private final String firstName;
+
+        private final String lastName;
+
+        private String gender;
+
+        private String OIB;
+
+        private String dateOfBirth;
+
+        private String nationality;
+
+        private String documentNumber;
+
+        private String dateOfExpiry;
+
+        private String faceImage;
+
+        private String frontImage;
+
+        private String backImage;
+
+        public ScannedDocumentBuilder(String firstName, String lastName){
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        public ScannedDocumentBuilder gender(String gender){
+            this.gender = gender;
+            return this;
+        }
+
+        public ScannedDocumentBuilder OIB(String OIB){
+            this.OIB = OIB;
+            return this;
+        }
+
+        public ScannedDocumentBuilder dateOfBirth(String dateOfBirth){
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public ScannedDocumentBuilder nationality(String nationality){
+            this.nationality = nationality;
+            return this;
+        }
+
+        public ScannedDocumentBuilder documentNumber(String documentNumber){
+            this.documentNumber = documentNumber;
+            return this;
+        }
+
+        public ScannedDocumentBuilder dateOfExpiry(String dateOfExpiry){
+            this.dateOfExpiry = dateOfExpiry;
+            return this;
+        }
+
+        public ScannedDocumentBuilder faceImage(String faceImage){
+            this.faceImage = faceImage;
+            return this;
+        }
+
+        public ScannedDocumentBuilder frontImage(String frontImage){
+            this.frontImage = frontImage;
+            return this;
+        }
+
+        public ScannedDocumentBuilder backImage(String backImage){
+            this.backImage = backImage;
+            return this;
+        }
+
+        public ScannedDocumentEntity build(){
+            return new ScannedDocumentEntity(this);
+        }
+
     }
 }
