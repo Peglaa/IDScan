@@ -17,10 +17,6 @@ import com.damir.stipancic.blinkstipancic.contract.InfoContract;
 import com.damir.stipancic.blinkstipancic.data.local.ScannedDocumentEntity;
 import com.damir.stipancic.blinkstipancic.presenters.DocumentInfoPresenter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class DocumentInfoActivity extends AppCompatActivity implements InfoContract.View {
 
     private TextView mFirstNameTV, mLastNameTV, mGenderTV, mDateOfBirthTV, mOibTV, mNationalityTV, mDocumentNumberTV, mDateOfExpiryTV;
