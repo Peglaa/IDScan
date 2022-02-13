@@ -31,8 +31,9 @@ public class DocumentInfoPresenter implements InfoContract.Presenter, InfoContra
     }
 
     @Override
-    public void onFinished(ScannedDocumentEntity scannedDocumentEntity) {
+    public void onFinished(ScannedDocumentEntity scannedDocumentEntity, boolean isExpired) {
         mView.getDocument(scannedDocumentEntity);
+        mView.notifyDate(isExpired);
     }
 
     @Override

@@ -15,6 +15,9 @@ import com.microblink.image.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -46,9 +49,9 @@ public class ScannedDocumentRepository{
         String dateOfExpiry = result.getDateOfExpiry().toString();
         if(result.getDateOfExpiry().getDate() != null)
           dateOfExpiry = result.getDateOfExpiry().getDate().toString();
-        String faceImage = storeImage("faceImage", result.getFaceImage(), result.getPersonalIdNumber(), context);
-        String frontImage = storeImage("frontImage", result.getFullDocumentFrontImage(), result.getPersonalIdNumber(), context);
-        String backImage = storeImage("backImage", result.getFullDocumentBackImage(), result.getPersonalIdNumber(), context);
+        String faceImage = storeImage("faceImage", result.getFaceImage(), result.getLastName(), context);
+        String frontImage = storeImage("frontImage", result.getFullDocumentFrontImage(), result.getLastName(), context);
+        String backImage = storeImage("backImage", result.getFullDocumentBackImage(), result.getLastName(), context);
 
         ScannedDocumentEntity document = new ScannedDocumentEntity.ScannedDocumentBuilder(firstName, lastName)
                 .OIB(OIB)
@@ -125,7 +128,8 @@ public class ScannedDocumentRepository{
             @Override
             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull ScannedDocumentEntity scannedDocumentEntity) {
 
-                listener.onFinished(scannedDocumentEntity);
+                boolean isExpired = checkDate(scannedDocumentEntity);
+                listener.onFinished(scannedDocumentEntity, isExpired);
 
             }
 
@@ -147,7 +151,8 @@ public class ScannedDocumentRepository{
             @Override
             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull ScannedDocumentEntity scannedDocumentEntity) {
 
-                listener.onFinished(scannedDocumentEntity);
+                boolean isExpired = checkDate(scannedDocumentEntity);
+                listener.onFinished(scannedDocumentEntity, isExpired);
 
             }
 
@@ -159,13 +164,13 @@ public class ScannedDocumentRepository{
 
     }
 
-    private String storeImage(String imageName, Image image, String OIB, Context context) {
+    private String storeImage(String imageName, Image image, String name, Context context) {
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         Bitmap bitmapImage;
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File myPath=new File(directory,imageName + OIB + ".jpg");
+        File myPath=new File(directory,imageName + name + ".jpg");
 
         FileOutputStream fos = null;
         try {
@@ -183,5 +188,24 @@ public class ScannedDocumentRepository{
             }
         }
         return myPath.getPath();
+    }
+
+    private boolean checkDate(ScannedDocumentEntity scannedDocumentEntity) {
+        Date expDate = toDate(scannedDocumentEntity.getDateOfExpiry());
+        return new Date().after(expDate);
+    }
+
+    private Date toDate(String dateOfExpiry) {
+        Date expDate = null;
+        Log.d("TAG", "toExpDate: " + dateOfExpiry);
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy.");
+        try {
+            expDate = format.parse(dateOfExpiry);
+            Log.d("TAG", "toDate: " + expDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return expDate;
     }
 }

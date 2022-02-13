@@ -8,7 +8,7 @@ public interface InfoContract {
     interface Presenter extends BasePresenter{
 
         interface OnFinishedListener {
-            void onFinished(ScannedDocumentEntity scannedDocumentEntity);
+            void onFinished(ScannedDocumentEntity scannedDocumentEntity, boolean isExpired);
             void onFailure(Throwable t);
         }
 
@@ -20,5 +20,6 @@ public interface InfoContract {
 
         void setDataToView(ScannedDocumentEntity scannedDocumentEntity);
         void getDocument(ScannedDocumentEntity scannedDocumentEntity);
+        void notifyDate(boolean isExpired);
     }
 }

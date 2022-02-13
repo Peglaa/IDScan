@@ -91,35 +91,21 @@ public class DocumentInfoActivity extends AppCompatActivity implements InfoContr
 
     }
 
-    private void checkDateOfExpiry(String dateOfExpiry) {
-        Date expDate = toDate(dateOfExpiry);
-        if (new Date().after(expDate))
-            Toast.makeText(this, "ID HAS EXPIRED!", Toast.LENGTH_SHORT).show();
-    }
-
-    private Date toDate(String dateOfExpiry) {
-        Date expDate = null;
-        Log.d("TAG", "toExpDate: " + dateOfExpiry);
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy.");
-        try {
-            expDate = format.parse(dateOfExpiry);
-            Log.d("TAG", "toDate: " + expDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return expDate;
-    }
-
     @Override
     public void setDataToView(ScannedDocumentEntity scannedDocument) {
         displayInformation(scannedDocument);
-        checkDateOfExpiry(scannedDocument.getDateOfExpiry());
+        //checkDateOfExpiry(scannedDocument.getDateOfExpiry());
     }
 
     @Override
     public void getDocument(ScannedDocumentEntity scannedDocumentEntity) {
         setDataToView(scannedDocumentEntity);
+    }
+
+    @Override
+    public void notifyDate(boolean isExpired) {
+        if(isExpired)
+            Toast.makeText(this, "ID HAS EXPIRED!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
